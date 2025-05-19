@@ -1,119 +1,127 @@
 import 'dart:typed_data';
 
 import 'package:equatable/equatable.dart';
-import './ml_dsa_mode.dart';
-import 'package:flutter_mldsa/src/rust/api/ml_dsa_44.dart';
-import 'package:flutter_mldsa/src/rust/api/ml_dsa_65.dart';
-import 'package:flutter_mldsa/src/rust/api/ml_dsa_87.dart';
+import 'package:flutter_mldsa/src/rust/api/mode.dart';
+import 'package:flutter_mldsa/src/rust/api/simple.dart';
 import 'package:pointycastle/api.dart';
 
 abstract interface class MlDsaAsymmetricKey implements AsymmetricKey {
-  abstract final MlDsaMode mlDsaMode;
-  abstract final Uint8List keyBytes;
+  final MldsaMode mlDsaMode;
+  final Uint8List keyBytes;
+
+  MlDsaAsymmetricKey({required this.mlDsaMode, required this.keyBytes});
 }
 
-sealed class MlDsaPrivateKey extends Equatable implements MlDsaAsymmetricKey, PrivateKey {
-  const MlDsaPrivateKey();
+class MlDsaPrivateKey extends Equatable implements MlDsaAsymmetricKey, PrivateKey {
+  @override
+  final MldsaMode mlDsaMode;
+  @override
+  final Uint8List keyBytes;
 
-  const factory MlDsaPrivateKey.mode44({required KeyPairMlDsa44 kp}) = MlDsaPrivateKey44;
-  const factory MlDsaPrivateKey.mode65({required KeyPairMlDsa65 kp}) = MlDsaPrivateKey65;
-  const factory MlDsaPrivateKey.mode87({required KeyPairMlDsa87 kp}) = MlDsaPrivateKey87;
+  const MlDsaPrivateKey({required this.mlDsaMode, required this.keyBytes});
+
+  factory MlDsaPrivateKey.fromKp({required KeypairModel kp}) =>
+      MlDsaPrivateKey(mlDsaMode: kp.mode(), keyBytes: kp.privateKey());
 
   @override
   List<Object?> get props => [mlDsaMode, keyBytes];
 }
 
-class MlDsaPublicKey44 extends MlDsaPublicKey {
-  final KeyPairMlDsa44 kp;
-
+class MlDsaPublicKey extends Equatable implements MlDsaAsymmetricKey, PublicKey {
   @override
-  Uint8List get keyBytes => fetchPublickey44(keys: kp);
-
+  final MldsaMode mlDsaMode;
   @override
-  MlDsaMode get mlDsaMode => MlDsaMode.MLDSA44;
+  final Uint8List keyBytes;
 
-  const MlDsaPublicKey44({required this.kp});
-}
+  const MlDsaPublicKey({required this.mlDsaMode, required this.keyBytes});
 
-class MlDsaPublicKey65 extends MlDsaPublicKey {
-  final KeyPairMlDsa65 kp;
-
-  @override
-  Uint8List get keyBytes => fetchPublickey65(keys: kp);
-
-  @override
-  MlDsaMode get mlDsaMode => MlDsaMode.MLDSA65;
-
-  const MlDsaPublicKey65({required this.kp});
-}
-
-class MlDsaPublicKey87 extends MlDsaPublicKey {
-  final KeyPairMlDsa87 kp;
-
-  @override
-  Uint8List get keyBytes => fetchPublickey87(keys: kp);
-
-  @override
-  MlDsaMode get mlDsaMode => MlDsaMode.MLDSA87;
-
-  const MlDsaPublicKey87({required this.kp});
-}
-
-class MlDsaPrivateKey44 extends MlDsaPrivateKey {
-  final KeyPairMlDsa44 kp;
-
-  @override
-  Uint8List get keyBytes => fetchPrivatekey44(keys: kp);
-
-  @override
-  MlDsaMode get mlDsaMode => MlDsaMode.MLDSA44;
-
-  const MlDsaPrivateKey44({required this.kp});
-}
-
-class MlDsaPrivateKey65 extends MlDsaPrivateKey {
-  final KeyPairMlDsa65 kp;
-
-  @override
-  Uint8List get keyBytes => fetchPrivatekey65(keys: kp);
-
-  @override
-  MlDsaMode get mlDsaMode => MlDsaMode.MLDSA65;
-
-  const MlDsaPrivateKey65({required this.kp});
-}
-
-class MlDsaPrivateKey87 extends MlDsaPrivateKey {
-  final KeyPairMlDsa87 kp;
-
-  @override
-  Uint8List get keyBytes => fetchPrivatekey87(keys: kp);
-
-  @override
-  MlDsaMode get mlDsaMode => MlDsaMode.MLDSA44;
-
-  const MlDsaPrivateKey87({required this.kp});
-}
-
-sealed class MlDsaPublicKey extends Equatable implements MlDsaAsymmetricKey, PublicKey {
-  const MlDsaPublicKey();
-
-  const factory MlDsaPublicKey.mode44({required KeyPairMlDsa44 kp}) = MlDsaPublicKey44;
-  const factory MlDsaPublicKey.mode65({required KeyPairMlDsa65 kp}) = MlDsaPublicKey65;
-  const factory MlDsaPublicKey.mode87({required KeyPairMlDsa87 kp}) = MlDsaPublicKey87;
+  factory MlDsaPublicKey.fromKp({required KeypairModel kp}) =>
+      MlDsaPublicKey(mlDsaMode: kp.mode(), keyBytes: kp.publicKey());
 
   @override
   List<Object?> get props => [mlDsaMode, keyBytes];
 }
 
-class MlDsaKeyPair<Pub extends MlDsaPublicKey, Priv extends MlDsaPrivateKey>
-    implements AsymmetricKeyPair<Pub, Priv> {
-  MlDsaKeyPair({required this.privateKey, required this.publicKey})
-      : assert(privateKey.mlDsaMode == publicKey.mlDsaMode, 'KeyPair must have the same mlDsaMode');
+class MlDsaKeyPair implements AsymmetricKeyPair<MlDsaPublicKey, MlDsaPrivateKey> {
+  const MlDsaKeyPair({required this.kp});
+
+  final KeypairModel kp;
 
   @override
-  final Priv privateKey;
+  MlDsaPrivateKey get privateKey => MlDsaPrivateKey.fromKp(kp: kp);
 
   @override
-  final Pub publicKey;
+  MlDsaPublicKey get publicKey => MlDsaPublicKey.fromKp(kp: kp);
 }
+
+// class MlDsaPublicKey44 extends MlDsaPublicKey {
+//   final KeyPairMlDsa44 kp;
+
+//   @override
+//   Uint8List get keyBytes => fetchPublickey44(keys: kp);
+
+//   @override
+//   MlDsaMode get mlDsaMode => MlDsaMode.MLDSA44;
+
+//   const MlDsaPublicKey44({required this.kp});
+// }
+
+// class MlDsaPublicKey65 extends MlDsaPublicKey {
+//   final KeyPairMlDsa65 kp;
+
+//   @override
+//   Uint8List get keyBytes => fetchPublickey65(keys: kp);
+
+//   @override
+//   MlDsaMode get mlDsaMode => MlDsaMode.MLDSA65;
+
+//   const MlDsaPublicKey65({required this.kp});
+// }
+
+// class MlDsaPublicKey87 extends MlDsaPublicKey {
+//   final KeyPairMlDsa87 kp;
+
+//   @override
+//   Uint8List get keyBytes => fetchPublickey87(keys: kp);
+
+//   @override
+//   MlDsaMode get mlDsaMode => MlDsaMode.MLDSA87;
+
+//   const MlDsaPublicKey87({required this.kp});
+// }
+
+// class MlDsaPrivateKey44 extends MlDsaPrivateKey {
+//   final KeyPairMlDsa44 kp;
+
+//   @override
+//   Uint8List get keyBytes => fetchPrivatekey44(keys: kp);
+
+//   @override
+//   MlDsaMode get mlDsaMode => MlDsaMode.MLDSA44;
+
+//   const MlDsaPrivateKey44({required this.kp});
+// }
+
+// class MlDsaPrivateKey65 extends MlDsaPrivateKey {
+//   final KeyPairMlDsa65 kp;
+
+//   @override
+//   Uint8List get keyBytes => fetchPrivatekey65(keys: kp);
+
+//   @override
+//   MlDsaMode get mlDsaMode => MlDsaMode.MLDSA65;
+
+//   const MlDsaPrivateKey65({required this.kp});
+// }
+
+// class MlDsaPrivateKey87 extends MlDsaPrivateKey {
+//   final KeyPairMlDsa87 kp;
+
+//   @override
+//   Uint8List get keyBytes => fetchPrivatekey87(keys: kp);
+
+//   @override
+//   MlDsaMode get mlDsaMode => MlDsaMode.MLDSA44;
+
+//   const MlDsaPrivateKey87({required this.kp});
+// }
