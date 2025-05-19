@@ -3,10 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mldsa/src/ml_dsa/mldsa_exceptions.dart';
 import 'package:flutter_mldsa/src/ml_dsa/mldsa_keypair.dart';
 import 'package:flutter_mldsa/src/ml_dsa/mldsa_signature.dart';
-import 'package:flutter_mldsa/src/ml_dsa/ml_dsa_mode.dart';
-import 'package:flutter_mldsa/src/rust/api/ml_dsa_44.dart';
-import 'package:flutter_mldsa/src/rust/api/ml_dsa_65.dart';
-import 'package:flutter_mldsa/src/rust/api/ml_dsa_87.dart';
+import 'package:flutter_mldsa/src/rust/api/simple.dart';
 import 'package:pointycastle/api.dart';
 
 class MlDsaSigner implements Signer {
@@ -60,12 +57,13 @@ class MlDsaSigner implements Signer {
     final keyMode = _private!.mlDsaMode;
     final keyBytes = _private!.keyBytes;
 
-    final result = switch (keyMode) {
-      MlDsaMode.MLDSA44 => MlDsaSignature(sig: signMessage44(keyBytes: keyBytes, msg: message)),
-      MlDsaMode.MLDSA65 => MlDsaSignature(sig: signMessage65(keyBytes: keyBytes, msg: message)),
-      MlDsaMode.MLDSA87 => MlDsaSignature(sig: signMessage87(keyBytes: keyBytes, msg: message)),
-    };
-    return result;
+    // final result = switch (keyMode) {
+    //   MldsaMode.mldsa44 => MlDsaSignature(sig: signMessage44(keyBytes: keyBytes, msg: message)),
+    //   MldsaMode.mldsa65 => MlDsaSignature(sig: signMessage65(keyBytes: keyBytes, msg: message)),
+    //   MldsaMode.mldsa87 => MlDsaSignature(sig: signMessage87(keyBytes: keyBytes, msg: message)),
+    // };
+    return MlDsaSignature(
+        sig: KeypairModel.signMessage(mode: keyMode, keyBytes: keyBytes, msg: message));
   }
 
   @override
@@ -81,13 +79,14 @@ class MlDsaSigner implements Signer {
       final keyBytes = _public!.keyBytes;
       final keyMode = _public!.mlDsaMode;
 
-      final result = switch (keyMode) {
-        MlDsaMode.MLDSA44 => verifySig44(keyBytes: keyBytes, msg: message, sigBytes: signature.sig),
-        MlDsaMode.MLDSA65 => verifySig65(keyBytes: keyBytes, msg: message, sigBytes: signature.sig),
-        MlDsaMode.MLDSA87 => verifySig87(keyBytes: keyBytes, msg: message, sigBytes: signature.sig),
-      };
+      // final result = switch (keyMode) {
+      //   MldsaMode.mldsa44 => verifySig44(keyBytes: keyBytes, msg: message, sigBytes: signature.sig),
+      //   MldsaMode.mldsa65 => verifySig65(keyBytes: keyBytes, msg: message, sigBytes: signature.sig),
+      //   MldsaMode.mldsa87 => verifySig87(keyBytes: keyBytes, msg: message, sigBytes: signature.sig),
+      // };
 
-      return result;
+      return KeypairModel.verifySig(
+          mode: keyMode, keyBytes: keyBytes, sigBytes: signature.sig, msg: message);
     } catch (e, stackTrace) {
       debugPrint('error: Error in Verifying Signature: $e, stackTrace: $stackTrace');
 

@@ -1,37 +1,22 @@
+import 'package:flutter_mldsa/src/ml_dsa/mldsa_keypair.dart';
 import 'package:flutter_mldsa/src/ml_dsa/mldsa_params.dart';
-import 'package:flutter_mldsa/src/rust/api/ml_dsa_44.dart';
-import 'package:flutter_mldsa/src/rust/api/ml_dsa_65.dart';
-import 'package:flutter_mldsa/src/rust/api/ml_dsa_87.dart';
+import 'package:flutter_mldsa/src/rust/api/mode.dart';
+import 'package:flutter_mldsa/src/rust/api/simple.dart';
 import 'package:pointycastle/api.dart';
-import './ml_dsa_mode.dart';
-import 'mldsa_keypair.dart';
 
 class MlDsaKeyGenerator implements KeyGenerator {
-  late MlDsaMode signingMode;
+  late MldsaMode signingMode;
 
-  MlDsaKeyGenerator({this.signingMode = MlDsaMode.MLDSA65});
+  MlDsaKeyGenerator({this.signingMode = MldsaMode.mldsa65});
 
   @override
   String get algorithmName => "MlDsa";
 
   @override
   MlDsaKeyPair generateKeyPair() {
-    switch (signingMode) {
-      case MlDsaMode.MLDSA44:
-        final kp = generateKeys44();
-        return MlDsaKeyPair(
-            privateKey: MlDsaPrivateKey.mode44(kp: kp), publicKey: MlDsaPublicKey.mode44(kp: kp));
-      case MlDsaMode.MLDSA65:
-        final kp = generateKeys65();
+    final kp = KeypairModel.generate(mode: signingMode);
 
-        return MlDsaKeyPair(
-            privateKey: MlDsaPrivateKey.mode65(kp: kp), publicKey: MlDsaPublicKey.mode65(kp: kp));
-
-      case MlDsaMode.MLDSA87:
-        final kp = generateKeys87();
-        return MlDsaKeyPair(
-            privateKey: MlDsaPrivateKey.mode87(kp: kp), publicKey: MlDsaPublicKey.mode87(kp: kp));
-    }
+    return MlDsaKeyPair(kp: kp);
   }
 
   @override
