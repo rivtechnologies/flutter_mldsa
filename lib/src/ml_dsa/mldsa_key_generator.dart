@@ -3,14 +3,18 @@ import 'package:flutter_mldsa/src/ml_dsa/mldsa_params.dart';
 import 'package:flutter_mldsa/src/rust/api/mode.dart';
 import 'package:flutter_mldsa/src/rust/api/simple.dart';
 import 'package:pointycastle/api.dart';
+import 'package:pointycastle/src/registry/registry.dart' as registry;
+
 
 class MlDsaKeyGenerator implements KeyGenerator {
+  static final registry.FactoryConfig factoryConfig =
+      registry.StaticFactoryConfig(KeyGenerator, 'Mldsa', () => MlDsaKeyGenerator());
   late MldsaMode signingMode;
 
   MlDsaKeyGenerator({this.signingMode = MldsaMode.mldsa65});
 
   @override
-  String get algorithmName => "MlDsa";
+  String get algorithmName => "Mldsa";
 
   @override
   MlDsaKeyPair generateKeyPair() {

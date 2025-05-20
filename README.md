@@ -8,47 +8,70 @@ Bindings to [RustCrypto implementation of ml-dsa](https://docs.rs/ml-dsa/latest/
 
 ## Getting started
 
-make sure to run
+To generate the needed files for the bridge:
 ```
 flutter_rust_bridge_codegen generate --watch --stop-on-error
 ```
 
-If you want to use the test project, use the test in the example folder.
 
+## Testing
+
+### Rust-Side
+
+```bash
+cd rust
+cargo test -- --show-output
+```
+
+
+### Flutter-Side
+
+```bash
+cd example
+flutter test -d $DEVICE integration_test/master_integration_test.dart
+```
+
+where `$DEVICE` is set to a device on the platform you want to test (for example `linux`, `emulator-5554`)
 
 ## Usage
 
-<br>
-1-Create a MlDsaKeyGenerator:
-```
+1. Create a MlDsaKeyGenerator:
+
+```dart
 final keyGenerator = MlDsaKeyGenerator();
 ```
 
-2-Init the generator with a maode to generate
+OR
+
+```dart
+final keyGenerator = KeyGenerator('Mldsa'); //Case sensitive
 ```
+
+2. Initialize the generator with a mode to generate
+```dart
 final generatorParams = MlDsaKeyGeneratorParams(mlDsaMode: MlDsaMode.MLDSA44);
 keyGenerator.init(generatorParams);
 ```
 
-3-Generate a keypair:
-```
+3. Generate a keypair:
+```dart
 final keypairA = keyGenerator.generateKeyPair();
 ```
 
-4-Create a Signer and init it:
-```
+4. Create a Signer and initialize it:
+```dart
 final signer = MlDsaSigner();
-signer.init(true, PrivateKeyParameter<MlDsaPrivateKey>(keypairA.privateKey));
+signer.init(true, PrivateKeyParameter<MlDsaPrivateKey>(keypairA.privateKeyBytes));
 ```
 
-5-Create a verify and init it:
-```
+5. Create a verify and Initialize it:
+```dart
 final verifier = MlDsaSigner();
-verifier.init(false, PublicKeyParameter<MlDsaPublicKey>(keypairA.publicKey));
+verifier.init(false, PublicKeyParameter<MlDsaPublicKey>(keypairA.publicKeyBytes));
 ```
 
-6-Use the MlDsaSigner functions to sign and verify:
-```
+6. Use the MlDsaSigner functions to sign and verify:
+```dart
 final signature = signer.generateSignature(message);
 final result = verifierCorrect.verifySignature(message, signature);
 ```

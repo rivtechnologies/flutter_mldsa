@@ -9,8 +9,6 @@ typedef TestCase = MldsaMode;
 
 void main() {
   group("signature verification tests", () {
-    setUpAll(FlutterMldsa.init);
-    tearDownAll(FlutterMldsa.dispose);
     final List<TestCase> testcases = MldsaMode.values;
     for (final testcase in testcases) {
       test(testcase.name, () {
