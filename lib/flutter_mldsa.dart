@@ -10,11 +10,11 @@ export 'package:flutter_mldsa/src/ml_dsa/mldsa_keypair.dart';
 export 'package:flutter_mldsa/src/ml_dsa/mldsa_signature.dart';
 export 'package:flutter_mldsa/src/ml_dsa/mldsa_signer.dart';
 export 'package:flutter_mldsa/src/rust/api/mode.dart';
-import 'package:pointycastle/pointycastle.dart';
 // ignore: implementation_imports
 import 'package:pointycastle/src/registry/registry.dart' show registry;
 
 class FlutterMldsa {
+  FlutterMldsa._();
   static bool _isInit = false;
   static bool _registryIsInit = false;
   static Future<void> init() async {
