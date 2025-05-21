@@ -3,50 +3,38 @@ name: all-tests
 on: push
 
 jobs:
-  generate-bindings:
+  setup-and-tests:
     name: Generating bindings
     runs-on: ubuntu-latest
     steps:
-      - name: Run Rust Tests
-        uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.27.4'
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          profile: minimal
+          override: true
+      - name: Run Flutter pub get
+        run: flutter pub get
 
-      - name: Run bash script
-        run: |
-          echo "Generating the Bindings"
-          flutter pub get
-          cd rust
-          cargo fetch
-          echo "The rust tests passed !"
-          cd ..
-  
-  
-  rust-test:
-    name: Rust-Side tests
-    runs-on: ubuntu-latest
-    steps:
-      - name: Run Rust Tests
-        uses: actions/checkout@v2
+      - name: Build or test Rust code
+        working-directory: rust
+        run: cargo fetch
+        
+      - name: Install flutter_rust_bridge_codegen
+        run: cargo install flutter_rust_bridge_codegen   
+        
+      - name: Test the Rust code
+        working-directory: rust
+        run:  cargo test -- --show-output 
 
-      - name: Run bash script
-        run: |
-          echo "Starting the rust tests"
-          cd rust
-          cargo test -- --show-output
-          echo "The rust tests passed !"
-          cd ..
-  
-  dart-test:
-      name: Dart-Side tests
-      runs-on: ubuntu-latest
-      steps:
-        - name: Run Dart Tests
-          uses: actions/checkout@v2
-  
-        - name: Run bash script
-          run: |
-            echo "Starting the dart tests"
-            cd example
-            flutter test -d linux integration_test/master_integration_test.dart
-            echo "The dart tests passed !"
-            cd ..
-          
+      - name: Test the Dart code
+        working-directory: example
+        run:  flutter test -d linux integration_test/master_integration_test.dart
+
