@@ -1,0 +1,52 @@
+name: all-tests
+
+on: push
+
+jobs:
+  generate-bindings:
+    name: Generating bindings
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Rust Tests
+        uses: actions/checkout@v2
+
+      - name: Run bash script
+        run: |
+          echo "Generating the Bindings"
+          flutter pub get
+          cd rust
+          cargo fetch
+          echo "The rust tests passed !"
+          cd ..
+  
+  
+  rust-test:
+    name: Rust-Side tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Rust Tests
+        uses: actions/checkout@v2
+
+      - name: Run bash script
+        run: |
+          echo "Starting the rust tests"
+          cd rust
+          cargo test -- --show-output
+          echo "The rust tests passed !"
+          cd ..
+  
+  dart-test:
+      name: Dart-Side tests
+      runs-on: ubuntu-latest
+      steps:
+        - name: Run Dart Tests
+          uses: actions/checkout@v2
+  
+        - name: Run bash script
+          run: |
+            echo "Starting the dart tests"
+            cd example
+            flutter test -d linux integration_test/master_integration_test.dart
+            echo "The dart tests passed !"
+            cd ..
+          
