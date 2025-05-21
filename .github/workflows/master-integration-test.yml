@@ -28,7 +28,10 @@ jobs:
         run: cargo fetch
         
       - name: Install flutter_rust_bridge_codegen
-        run: cargo install flutter_rust_bridge_codegen   
+        run: cargo install flutter_rust_bridge_codegen 
+        
+      - name: Install flutter_rust_bridge_codegen
+        run: flutter_rust_bridge_codegen generate 
         
       - name: Test the Rust code
         working-directory: rust
