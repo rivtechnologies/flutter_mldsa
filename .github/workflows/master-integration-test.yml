@@ -50,14 +50,19 @@ jobs:
       - name: Install flutter_rust_bridge_codegen
         run: cargo install flutter_rust_bridge_codegen 
         
-      - name: Install flutter_rust_bridge_codegen
-        run: flutter_rust_bridge_codegen generate 
+      - name: Generate Rust Bindings
+        run:  flutter_rust_bridge_codegen generate
         
       - name: Test the Rust code
         working-directory: rust
         run:  cargo test -- --show-output 
 
-      - name: Test the Dart code
+      - name: Install xvfb
+        run: sudo apt-get install -y xvfb
+
+      - name: Run Linux integration test in virtual display and test Dart Code
         working-directory: example
-        run:  flutter test -d linux integration_test/master_integration_test.dart
+        run: |
+          xvfb-run --auto-servernum -- flutter test -d linux integration_test/master_integration_test.dart
+
 
