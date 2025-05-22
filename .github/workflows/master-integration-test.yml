@@ -5,7 +5,7 @@ on: push
 jobs:
   setup-and-tests:
     name: Generating bindings
-    runs-on: ubuntu-latest
+    runs-on: rust-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -14,12 +14,6 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.27.4'
-      - name: Install Rust
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          profile: minimal
-          override: true
 
       - name: Install Linux dependencies
         run: |
