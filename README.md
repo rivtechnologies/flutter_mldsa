@@ -2,8 +2,11 @@
 
 [Pointycastle]() interface implentations for [MlDsa](https://csrc.nist.gov/pubs/fips/204/final) using bindings to [RustCrypto implementation of ml-dsa](https://docs.rs/ml-dsa/latest/ml_dsa/)
 
-## Security
-The RustCrypto implementation has NOT been audited for security. Use at your own risk.
+## ⚠️ Security Warning
+
+The implementation contained in this crate has never been independently audited!
+
+USE AT YOUR OWN RISK!
 
 If you have discovered a security vulnerability in this project, please report it privately. Do not disclose it as a public issue. This gives us time to work with you to fix the issue before public exposure, reducing the chance that the exploit will be used before a patch is released. See SECURITY.md for more details.
 
