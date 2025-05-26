@@ -33,11 +33,10 @@ migrate_working_dir/
 build/
 
 # Generated Flutter Rust Bridge dart code
-lib/src/rust/**
-**/.gitkeep
-# keep this one placeholder in Git
+lib/src/rust/*
 !lib/src/rust/.gitkeep
-!/lib/src/rust/.gitkeep
+
+# keep this one placeholder in Git
 rust/src/frb_generated.rs
 lib/src/rust/frb_generated.dart
 rust/Cargo.lock
