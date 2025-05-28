@@ -1,0 +1,16 @@
+name: master-integration-test
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  setup-and-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Run CI Device Setup Workflow
+        uses: ./.github/actions/integration-test

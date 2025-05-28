@@ -1,0 +1,18 @@
+name: Publish Tagged Commits
+descriptions: "This will fetch the publisher information and publish the new package version"
+runs:
+  using: "composite"
+  setps:
+    - name: Run the publishing script to take the cred token from secrets and get rid of it afterwards.
+      shell: bash
+      run: |
+          if [ "${{ job.status }}" != "success" ]; then exit 0; fi
+          mkdir -p ~/.config/dart
+          echo "${{ secrets.PUB_CREDENTIALS }}" > ~/.config/dart/pub-credentials.json
+
+          flutter pub publish --dry-run
+          flutter pub publish
+
+          shred -u ~/.config/dart/pub-credentials.json || rm -f ~/.config/dart/pub-credentials.json
+          echo "PUB_CREDENTIALS was cleared"
+          echo "::add-mask::${{ secrets.PUB_CREDENTIALS }}"

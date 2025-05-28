@@ -1,17 +1,17 @@
 sudo apt-get update
 sudo apt-get install -y \
             cmake \
-            ninja-build \
-            pkg-config \
             libgtk-3-dev \
-            liblzma-dev \
-            libstdc++6 \
-            libgl1-mesa-dev \
-            libegl1-mesa-dev \
-            libxcb1-dev \
-            libx11-dev \
-            libgdk-pixbuf2.0-dev \
-            libssl-dev
+            # ninja-build \
+            # pkg-config \
+            # liblzma-dev \
+            # libstdc++6 \
+            # libgl1-mesa-dev \
+            # libegl1-mesa-dev \
+            # libxcb1-dev \
+            # libx11-dev \
+            # libgdk-pixbuf2.0-dev \
+            # libssl-dev
 
 flutter config --enable-linux-desktop
 sudo apt-get install -y xvfb
