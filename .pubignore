@@ -32,6 +32,8 @@ lib/src/rust/.gitkeep
 .flutter-plugins
 .flutter-plugins-dependencies
 build/
+/.github/**
+/scripts/**
 
 # Generated Flutter Rust Bridge dart code
 !rust/src/**

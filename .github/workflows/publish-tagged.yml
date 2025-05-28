@@ -15,3 +15,5 @@ jobs:
         
       - name: Publish Action
         uses: ./.github/actions/publish-tagged-commit
+        with:
+          pub_cred: ${{ secrets.PUB_CREDENTIALS }}
