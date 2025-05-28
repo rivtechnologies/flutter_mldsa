@@ -5,8 +5,7 @@ on:
     branches:
       - main
     tags:
-      - "v*"
-
+      - 'v*'
 jobs:
   publish:
     runs-on: ubuntu-latest
