@@ -11,7 +11,7 @@ runs:
           echo "${{ secrets.PUB_CREDENTIALS }}" > ~/.config/dart/pub-credentials.json
 
           flutter pub publish --dry-run
-          flutter pub publish
+          # flutter pub publish
 
           shred -u ~/.config/dart/pub-credentials.json || rm -f ~/.config/dart/pub-credentials.json
           echo "PUB_CREDENTIALS was cleared"
