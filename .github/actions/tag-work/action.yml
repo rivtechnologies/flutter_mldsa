@@ -7,15 +7,25 @@ runs:
       id: tag_check
       shell: bash
       run: |
+        tag=$(git describe --tags --exact-match HEAD 2>/dev/null \ || git tag --points-at HEAD)
         tag_name=$(git describe --tags)
-        tag=$(git tag --points-at HEAD)
 
+
+        tag=$(git tag --points-at HEAD)
         if [ -z "$tag" ]; then
           echo "No tag found pointing at HEAD"
           exit 1
         fi
 
-        sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/local/bin/yq
-        sudo chmod +x /usr/local/bin/yq
+        type=$(git cat-file -t "$tag")
+        
+        if [ "$type" = "commit" ]; then
+          echo "$tag is LIGHTWEIGHT"
+          exit 1
+        fi
 
-        sh scripts/tag-work.sh
+        if git cat-file -t "$tag" | grep -q '^tag$'; then
+          sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/local/bin/yq
+          sudo chmod +x /usr/local/bin/yq
+          sh scripts/tag-work.sh
+        fi
