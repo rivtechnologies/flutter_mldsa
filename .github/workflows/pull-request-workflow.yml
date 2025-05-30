@@ -19,6 +19,3 @@ jobs:
 
       - name: Run CI Device Setup Workflow
         uses: ./.github/actions/integration-test
-
-      - name: Run CI Device Setup Workflow
-        uses: ./.github/actions/integration-test

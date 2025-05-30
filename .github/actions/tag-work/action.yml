@@ -1,0 +1,21 @@
+name: Working on the tag
+description: This is going to do the necessary work involving the tag
+runs:
+  using: "composite"
+  steps:
+    - name: Check if current tag is annotated
+      id: tag_check
+      shell: bash
+      run: |
+        tag_name=$(git describe --tags)
+        tag=$(git tag --points-at HEAD)
+
+        if [ -z "$tag" ]; then
+          echo "No tag found pointing at HEAD"
+          exit 1
+        fi
+
+        sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/local/bin/yq
+        sudo chmod +x /usr/local/bin/yq
+
+        sh scripts/tag-work.sh

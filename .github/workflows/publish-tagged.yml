@@ -16,6 +16,8 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
           ref: ${{ github.ref }}
+      - name: Necessary tag work
+        uses: ./.github/actions/tag-work 
       - uses: dart-lang/setup-dart@v1
       - name: Setup CI Device action
         uses: ./.github/actions/integration-test
