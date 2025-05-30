@@ -1,0 +1,12 @@
+name: Publish Tagged Commits
+descriptions: "This will fetch the publisher information and publish the new package version"
+runs:
+  using: "composite"
+  steps:
+    - name: Run the publishing script to take the cred token from secrets and get rid of it afterwards.
+      shell: bash
+      run: |
+          if [ "${{ job.status }}" != "success" ]; then exit 1; fi
+          sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/local/bin/yq
+          sudo chmod +x /usr/local/bin/yq
+          sh scripts/pubspec-version-control.sh

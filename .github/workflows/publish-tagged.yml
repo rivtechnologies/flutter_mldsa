@@ -19,9 +19,12 @@ jobs:
       - name: Necessary tag work
         uses: ./.github/actions/tag-work 
       - uses: dart-lang/setup-dart@v1
+      
+      - name: Pubspec Version Update
+        uses: ./.github/actions/pubspec-version-update
+        
       - name: Setup CI Device action
         uses: ./.github/actions/integration-test
-        
       - name: Publish Action
         uses: ./.github/actions/publish-tagged-commit
         with:
