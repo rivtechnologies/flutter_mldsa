@@ -1,6 +1,6 @@
 cd rust
-crago fetch
-crago test
+cargo fetch
+cargo test
 cargo build --release
 
 
