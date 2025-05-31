@@ -7,23 +7,21 @@ runs:
       id: tag_check
       shell: bash
       run: |
-        tag=$(git describe --tags --exact-match HEAD 2>/dev/null \ || git tag --points-at HEAD)
-        tag_name=$(git describe --tags)
 
+        tag_name=${GITHUB_REF#refs/tags/}
+        echo "$tag_name"
+        tag_commit=$(git rev-parse "$tag_name^{commit}")
 
-        tag=$(git tag --points-at HEAD)
-        if [ -z "$tag" ]; then
-          echo "No tag found pointing at HEAD"
+        if [ -z "$tag_commit" ]; then
+          echo "No tag found pointing there"
           exit 1
         fi
 
-        type=$(git cat-file -t "$tag")
+        type=$(git cat-file -t "$tag_name")
         
         if [ "$type" = "commit" ]; then
-          echo "$tag is LIGHTWEIGHT"
+          echo "$tag_name is a LIGHTWEIGHT tag"
           exit 1
-        fi
-
-        if git cat-file -t "$tag" | grep -q '^tag$'; then
+        elif [ "$type" = "tag" ]; then
           sh scripts/tag-work.sh
         fi
