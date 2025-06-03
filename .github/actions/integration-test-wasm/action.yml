@@ -1,0 +1,15 @@
+name: Setup Wasm Test
+description: Setup the Wasm Integration Test
+runs:
+  using: "composite"
+  steps:
+    - name: Set up ChromeDriver
+      uses: nanasess/setup-chromedriver@v2
+    - name: Build Web & MV
+      shell: bash
+      run: |
+        cd example
+        make build-web
+        
+        
+

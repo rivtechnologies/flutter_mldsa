@@ -6,7 +6,7 @@ import 'package:pointycastle/api.dart';
 typedef TestCase = MldsaMode;
 
 void main() {
-  group("signature verification tests", () {
+  group("Keygen tests", () {
     final List<TestCase> testcases = MldsaMode.values;
     for (final testcase in testcases) {
       test(testcase.name, () {
@@ -29,5 +29,6 @@ void main() {
         }
       }, timeout: Timeout(Duration(days: 1)));
     }
+    print('THE KEYGEN TESTS');
   });
 }
