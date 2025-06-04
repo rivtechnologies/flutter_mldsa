@@ -2,9 +2,15 @@ CHROMEDRIVER?=chromedriver
 
 .PHONY: build-web
 build-web:
-	@cd .. && flutter_rust_bridge_codegen build-web
+	@cd .. && flutter_rust_bridge_codegen build-web --release
+	@rm -rf web/pkg
 	@cp -r ../web/pkg web/pkg
 	@flutter build web
+
+.PHONY: run-web
+run-web:
+	@$(MAKE) build-web 
+	@flutter run --web-header=Cross-Origin-Opener-Policy=same-origin --web-header=Cross-Origin-Embedder-Policy=require-corp -d chrome
 
 .PHONY: test-web
 test-web:

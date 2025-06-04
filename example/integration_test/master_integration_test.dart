@@ -13,23 +13,16 @@ import 'verification_test.dart' as verification;
 
 void main() async {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-  await Future.delayed(const Duration(days: 1));
 
   try {
     await FlutterMldsa.init();
     print('keygen tests incoming');
-    await Future.delayed(Duration(seconds: 10));
-    // keygen.main();
+    keygen.main();
     print('signing tests incoming');
-    await Future.delayed(Duration(seconds: 10));
-    // signing.main();
+    signing.main();
     print('verification tests incoming');
-    await Future.delayed(Duration(seconds: 10));
-    // verification.main();
-    // expect(false, true);
-    // test('aaa', (){
-    // expect(false, true);
-    // });
+    verification.main();
+
     FlutterMldsa.dispose();
   } catch (e, st) {
     print(e);

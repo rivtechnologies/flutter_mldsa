@@ -55,12 +55,6 @@ void main() {
               final failResult = verifierWrong.verifySignature(message, signature);
               expect(successResult, true);
               expect(failResult, false);
-              print('it tested');
-              print('successResult: $successResult');
-              print('failResult: $failResult');
-              if (successResult == true && failResult == false) {
-                print('passed');
-              }
             }
           }
         } catch (error, stacktrace) {

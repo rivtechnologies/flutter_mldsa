@@ -53,6 +53,5 @@ void main() {
         }
       }, timeout: Timeout(Duration(days: 1)));
     }
-    print('THE SIGNING TESTS');
   });
 }

@@ -12,9 +12,9 @@ on:
 
 jobs:
   test:
-    container:
-      image: rust:1.86
     runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/catthehacker/ubuntu:rust-22.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -27,3 +27,7 @@ jobs:
 
       - name: Integration tests for wasm
         uses: ./.github/actions/integration-test-wasm
+
+      - name: Exit Failure
+        if: ${{ failure() }}
+        run: exit 1

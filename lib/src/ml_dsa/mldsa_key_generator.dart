@@ -17,11 +17,7 @@ class MlDsaKeyGenerator implements KeyGenerator {
   String get algorithmName => "Mldsa";
 
   @override
-  MlDsaKeyPair generateKeyPair() {
-    final kp = KeypairModel.generate(mode: signingMode);
-
-    return MlDsaKeyPair(kp: kp);
-  }
+  MlDsaKeyPair generateKeyPair()  => MlDsaKeyPair.generate(mode: signingMode);
 
   @override
   void init(CipherParameters params) {

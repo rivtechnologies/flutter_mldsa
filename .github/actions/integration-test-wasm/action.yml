@@ -5,11 +5,20 @@ runs:
   steps:
     - name: Set up ChromeDriver
       uses: nanasess/setup-chromedriver@v2
+
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: nightly
+        profile: minimal
+        override: true
+        
     - name: Build Web & MV
       shell: bash
       run: |
+        sudo mv -f chromedriver /usr/local/bin/chromedriver
         cd example
-        make build-web
+        CHROMEDRIVER=chromedriver make build-web
         
         
 

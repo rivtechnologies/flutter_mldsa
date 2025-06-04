@@ -18,12 +18,9 @@ void main() async {
       try {
         await FlutterMldsa.init();
         print('Tests incoming');
-        await Future.delayed(Duration(seconds: 10));
-        _testMldsa();
-        // expect(false, true);
-        // test('aaa', () {
-        //   expect(false, true);
-        // });
+        keygen.main();
+        signing.main();
+        verification.main();
         FlutterMldsa.dispose();
       } catch (e, st) {
         print(e);
@@ -35,8 +32,7 @@ void main() async {
   });
 }
 
-Future<void> _testMldsa() async {
-  final testcases = [MldsaMode.mldsa44, MldsaMode.mldsa65,];
+Future<void> _testMldsa(List<MldsaMode> testcases) async {
   for (final testcase in testcases) {
     //******This is the intra MlDsa mode testing. Confirming correct behavior is enforced when dealing with two different modes is in another file***********
     try {
@@ -79,8 +75,6 @@ Future<void> _testMldsa() async {
           expect(successResult, true);
           expect(failResult, false);
           print('it tested');
-          print('successResult: $successResult');
-          print('failResult: $failResult');
           if (successResult == true && failResult == false) {
             print('passed');
           }

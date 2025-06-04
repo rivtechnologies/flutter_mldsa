@@ -16,9 +16,6 @@ runs:
     - name: 'Setup Dependencies'
       shell: bash
       run: |
-        sudo apt-get update
-        sudo apt-get install -y cmake libgtk-3-dev
-
         flutter config --enable-linux-desktop
         sudo apt-get install -y xvfb
         cargo install flutter_rust_bridge_codegen@2.10.0

@@ -1,57 +1,85 @@
 import 'dart:typed_data';
 
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_mldsa/src/rust/api/mode.dart';
 import 'package:flutter_mldsa/src/rust/api/simple.dart';
 import 'package:pointycastle/api.dart';
 
 abstract interface class MlDsaAsymmetricKey implements AsymmetricKey {
-  final MldsaMode mlDsaMode;
-  final Uint8List keyBytes;
+  factory MlDsaAsymmetricKey.public({required MldsaMode mlDsaMode, required Uint8List keyBytes}) =
+      MlDsaPublicKey;
 
-  MlDsaAsymmetricKey({required this.mlDsaMode, required this.keyBytes});
+  factory MlDsaAsymmetricKey.private({required MldsaMode mlDsaMode, required Uint8List keyBytes}) =
+      MlDsaPrivateKey;
 }
 
 class MlDsaPrivateKey extends Equatable implements MlDsaAsymmetricKey, PrivateKey {
-  @override
-  final MldsaMode mlDsaMode;
-  @override
-  final Uint8List keyBytes;
+  MldsaMode get mlDsaMode => _key.mode();
 
-  const MlDsaPrivateKey({required this.mlDsaMode, required this.keyBytes});
+  Uint8List signMsg(Uint8List msg) => _key.signMessage(msg: msg);
 
-  factory MlDsaPrivateKey.fromKp({required KeypairModel kp}) =>
-      MlDsaPrivateKey(mlDsaMode: kp.mode(), keyBytes: kp.privateKey());
+  Uint8List bytes() => _key.bytes();
+
+  final SigningKeyOrRef _key;
+
+  const MlDsaPrivateKey._(this._key);
+  // : assert(!kIsWeb || mlDsaMode != MldsaMode.mldsa87, 'mldsa87 not supported on web');
+
+  factory MlDsaPrivateKey({required MldsaMode mlDsaMode, required Uint8List keyBytes}) {
+    final sk = SigningKey(mode: mlDsaMode, bytes: keyBytes);
+    return MlDsaPrivateKey._(SigningKeyOrRef(key: sk));
+  }
 
   @override
-  List<Object?> get props => [mlDsaMode, keyBytes];
+  List<Object?> get props => [_key];
 }
 
 class MlDsaPublicKey extends Equatable implements MlDsaAsymmetricKey, PublicKey {
-  @override
-  final MldsaMode mlDsaMode;
-  @override
-  final Uint8List keyBytes;
+  MldsaMode get mlDsaMode => _key.mode();
 
-  const MlDsaPublicKey({required this.mlDsaMode, required this.keyBytes});
+  final VerifyingKeyOrRef _key;
 
-  factory MlDsaPublicKey.fromKp({required KeypairModel kp}) =>
-      MlDsaPublicKey(mlDsaMode: kp.mode(), keyBytes: kp.publicKey());
+  bool verifySig(Uint8List sigBytes, Uint8List msg) => _key.verifySig(sigBytes: sigBytes, msg: msg);
+
+  Uint8List bytes() => _key.bytes();
+
+  const MlDsaPublicKey._(this._key);
+  // : assert(!kIsWeb || mlDsaMode != MldsaMode.mldsa87, 'mldsa87 not supported on web');
+
+  factory MlDsaPublicKey({required MldsaMode mlDsaMode, required Uint8List keyBytes}) {
+    final vk = VerifyingKey(mode: mlDsaMode, bytes: keyBytes);
+    return MlDsaPublicKey._(VerifyingKeyOrRef(key: vk));
+  }
 
   @override
-  List<Object?> get props => [mlDsaMode, keyBytes];
+  List<Object?> get props => [_key];
 }
 
 class MlDsaKeyPair implements AsymmetricKeyPair<MlDsaPublicKey, MlDsaPrivateKey> {
-  const MlDsaKeyPair({required this.kp});
+  // MlDsaKeyPair(
+  //     {required MlDsaPublicKey})
+  //     : kp = KeyPair(publicKey: publicKey, privateKey: privateKey, mode: mode),
+  //       assert(!kIsWeb || mode != MldsaMode.mldsa87, 'mldsa87 not supported on web');
 
-  final KeypairModel kp;
+  const MlDsaKeyPair._(this._kp);
+
+  factory MlDsaKeyPair(
+          {required MldsaMode mode, required Uint8List pubKey, required Uint8List privKey}) =>
+      MlDsaKeyPair._(KeyPair(
+          verifyingKey: VerifyingKey(mode: mode, bytes: pubKey),
+          signingKey: SigningKey(mode: mode, bytes: privKey)));
+
+  final KeyPair _kp;
+
+  factory MlDsaKeyPair.generate({required MldsaMode mode}) =>
+      MlDsaKeyPair._(KeyPair.generate(mode: mode));
 
   @override
-  MlDsaPrivateKey get privateKey => MlDsaPrivateKey.fromKp(kp: kp);
+  MlDsaPrivateKey get privateKey => MlDsaPrivateKey._(_kp.signingKey());
 
   @override
-  MlDsaPublicKey get publicKey => MlDsaPublicKey.fromKp(kp: kp);
+  MlDsaPublicKey get publicKey => MlDsaPublicKey._(_kp.verifyingKey());
 }
 
 // class MlDsaPublicKey44 extends MlDsaPublicKey {
