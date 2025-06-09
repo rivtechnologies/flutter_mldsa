@@ -19,16 +19,11 @@ void main() {
           for (var i = 0; i < 10; i++) {
             keyGenerator.generateKeyPair();
           }
-        } catch (error, stacktrace) {
-          print('****************');
-          print('error: $error');
-          print('stacktrace: $stacktrace');
+        } catch (error) {
 
-          print('****************');
           fail(error.toString());
         }
       }, timeout: Timeout(Duration(days: 1)));
     }
-    print('THE KEYGEN TESTS');
   });
 }

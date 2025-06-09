@@ -3,26 +3,47 @@ description: "Installs tools and sets up environment for the CI "
 runs:
   using: "composite"
   steps:
+    - name: update pacakge manager
+      shell: bash
+      run: apt-get update
+
     - name: Install jq
-      run: apt-get update && apt-get install -y jq
+      shell: bash
+      run: apt-get install -y jq
 
-    - name: setup flutter
-      uses: subosito/flutter-action@v2
-      with:
-        flutter-version: "3.27.4"
-
-    - name: Install Rust
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: nightly
-        profile: minimal
-        override: true
-    - name: 'Setup the CI device by installing dependencies'
+    - name: Set up Node.js
       shell: bash
       run: |
-        sudo apt-get update
-        sudo apt-get install -y cmake libgtk-3-dev ninja-build pkg-config clang
+        apt-get install nodejs -y
+
+    - name: Set up Node.js two electric boogaloo
+      uses: actions/setup-node@v4
+      with:
+        node-version: "22.16.0"
+
+    - name: git exception for flutter
+      shell: bash
+      run: git config --global --add safe.directory ${RUNNER_TOOL_CACHE}/flutter/3.32.2/stable/flutter
+
+    - uses: flutter-actions/setup-flutter@v4
+      with:
+        channel: stable
+        version: 3.32.2
+
+
+
+    # - name: Install Rust
+    #   uses: actions-rs/toolchain@v1
+    #   with:
+    #     toolchain: stable
+    #     profile: minimal
+    #     override: true
+
+    - name: "Setup the CI device by installing dependencies"
+      shell: bash
+      run: |
+        apt-get install -y cmake libgtk-3-dev ninja-build pkg-config clang libasound2
 
         flutter config --enable-linux-desktop
-        sudo apt-get install -y xvfb
+        apt-get install -y xvfb
         cargo install flutter_rust_bridge_codegen@2.10.0

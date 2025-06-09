@@ -1,4 +1,5 @@
-import 'dart:async';
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 import 'dart:math';
 
@@ -7,28 +8,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:pointycastle/api.dart';
 
-import 'keygen_test.dart' as keygen;
-import 'signing_test.dart' as signing;
-import 'verification_test.dart' as verification;
-
 void main() async {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   testWidgets('Mldsa WASM', (WidgetTester tester) async {
-    await tester.runAsync(() async {
-      try {
-        await FlutterMldsa.init();
-        print('Tests incoming');
-        keygen.main();
-        signing.main();
-        verification.main();
-        FlutterMldsa.dispose();
-      } catch (e, st) {
-        print(e);
-        print(st);
-      } finally {
-        print('what da hellll');
-      }
-    });
+    await FlutterMldsa.init();
+    final modeList = MldsaMode.values;
+    _testMldsa(modeList);
+    FlutterMldsa.dispose();
   });
 }
 

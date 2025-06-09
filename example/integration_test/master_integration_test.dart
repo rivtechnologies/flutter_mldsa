@@ -1,11 +1,8 @@
-import 'dart:async';
-import 'dart:convert';
-import 'dart:math';
+// ignore_for_file: avoid_print
 
 import 'package:flutter_mldsa/flutter_mldsa.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:pointycastle/api.dart';
 
 import 'keygen_test.dart' as keygen;
 import 'signing_test.dart' as signing;
@@ -27,7 +24,6 @@ void main() async {
   } catch (e, st) {
     print(e);
     print(st);
-  } finally {
-    print('what da hellll');
+    fail(e.toString());
   }
 }

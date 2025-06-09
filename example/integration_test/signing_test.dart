@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 import 'package:flutter_mldsa/src/ml_dsa/mldsa_key_generator.dart';
 import 'package:flutter_mldsa/src/ml_dsa/mldsa_params.dart';

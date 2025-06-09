@@ -99,6 +99,7 @@ where `$VERSION` is the version you are using
 ```bash
 flutter_rust_bridge_codegen build-web --release
 ```
+Note: The `--release` flag is needed because of the size of the keypair in Mldsa 87. Otherwise, you will get a Memory out of Bounds error. 
 
 4. Copy the built files in `web/pkg` to your app's `web/pkg` directory.
 

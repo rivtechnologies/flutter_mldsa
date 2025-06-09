@@ -3,38 +3,22 @@ description: "Installs tools and sets up environment for the CI "
 runs:
   using: "composite"
   steps:
-    - name: Set up Flutter
-      uses: subosito/flutter-action@v2
-      with:
-        flutter-version: "3.27.4"
-    # - name: Install Rust
-    #   uses: actions-rs/toolchain@v1
-    #   with:
-    #     toolchain: stable
-    #     profile: minimal
-    #     override: true
-    - name: 'Setup Dependencies'
-      shell: bash
-      run: |
-        flutter config --enable-linux-desktop
-        sudo apt-get install -y xvfb
-        cargo install flutter_rust_bridge_codegen@2.10.0
-        
     - name: generate rust bindings
       shell: bash
       run: |   
         flutter_rust_bridge_codegen generate
 
-    - name: rust side tests
+    - name: rust-side tests
       shell: bash
       run: |  
         cd rust
         cargo test -- --show-output
         cargo build --release
 
-    - name: flutter side tests
+    - name: flutter-side tests
       shell: bash
       run: |
+        flutter --version
         cd example
         flutter clean
         flutter pub get

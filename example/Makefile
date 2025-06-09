@@ -10,7 +10,7 @@ build-web:
 .PHONY: run-web
 run-web:
 	@$(MAKE) build-web 
-	@flutter run --web-header=Cross-Origin-Opener-Policy=same-origin --web-header=Cross-Origin-Embedder-Policy=require-corp -d chrome
+	@flutter run -d chrome --wasm
 
 .PHONY: test-web
 test-web:
@@ -20,5 +20,5 @@ test-web:
 		CHROME_PID=$$!; \
 		trap "kill $$CHROME_PID" EXIT; \
 		sleep 2; \
-		flutter drive --driver=test_driver/integration_test.dart -d chrome --target=integration_test/master_integration_test_web.dart --wasm \
+		flutter drive --driver=test_driver/integration_test.dart -d web-server --target=integration_test/master_integration_test_web.dart --wasm \
 	)
