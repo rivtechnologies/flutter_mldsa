@@ -7,9 +7,8 @@ runs:
       shell: bash
       run: apt-get update
 
-    - name: Install jq
-      shell: bash
-      run: apt-get install -y jq
+    - name: 'Setup yq'
+      uses: dcarbone/install-yq-action@v1
 
     - name: Set up Node.js
       shell: bash
