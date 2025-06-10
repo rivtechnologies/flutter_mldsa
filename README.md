@@ -76,6 +76,48 @@ FlutterMldsa.dispose();
 ```
 
 
+## Web Support via WASM
+
+`flutter_mldsa` supports web by compiling the rust side to WASM, with some caveats.
+
+### Steps
+1. You will need the `flutter_rust_bridge_codegen` tool, install it with cargo:
+
+```bash
+cargo install flutter_rust_bridge_codegen
+```
+
+2. Navigate to your pub cache directory (usually `$HOME/.pub-cache`) and find flutter_mldsa, for example
+
+```bash
+cd $HOME/.pub-cache/hosted/pub.dev/flutter_mldsa-$VERSION/
+```
+where `$VERSION` is the version you are using 
+
+3. Build the library for web (you will need the nightly rust compiler installed on your machine) 
+
+```bash
+flutter_rust_bridge_codegen build-web --release
+```
+Note: The `--release` flag is needed because of the size of the keypair in Mldsa 87. Otherwise, you will get a Memory out of Bounds error. 
+
+4. Copy the built files in `web/pkg` to your app's `web/pkg` directory.
+
+```bash
+mkdir -p $PROJECT_ROOT/web/pkg
+cp web/pkg/* $PROJECT_ROOT/web/pkg
+```
+
+where `$PROJECT_ROOT` is your app's root directory
+
+5. Run your application with the --wasm flag
+
+```bash
+flutter run -d chrome --wasm
+```
+
+For an example build script, see the [`Makefile`](./example/Makefile) in the example 
+
 ## Testing
 
 ### Rust-Side
@@ -94,6 +136,13 @@ flutter test -d $DEVICE integration_test/master_integration_test.dart
 ```
 
 where `$DEVICE` is set to a device on the platform you want to test (for example `linux`, `emulator-5554`)
+
+### Flutter web
+
+```bash
+cd example
+CHROMEDRIVER=path/to/chromedriver make test-web
+```
 
 ## License
 Licensed at:

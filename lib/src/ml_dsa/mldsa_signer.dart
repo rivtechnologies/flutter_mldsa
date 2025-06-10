@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mldsa/src/ml_dsa/mldsa_exceptions.dart';
 import 'package:flutter_mldsa/src/ml_dsa/mldsa_keypair.dart';
 import 'package:flutter_mldsa/src/ml_dsa/mldsa_signature.dart';
-import 'package:flutter_mldsa/src/rust/api/simple.dart';
 import 'package:pointycastle/api.dart';
 
 class MlDsaSigner implements Signer {
@@ -54,16 +53,9 @@ class MlDsaSigner implements Signer {
       throw (Exception('Sign Msg (Verifier Configuration), Use Init Method'));
     }
 
-    final keyMode = _private!.mlDsaMode;
-    final keyBytes = _private!.keyBytes;
 
-    // final result = switch (keyMode) {
-    //   MldsaMode.mldsa44 => MlDsaSignature(sig: signMessage44(keyBytes: keyBytes, msg: message)),
-    //   MldsaMode.mldsa65 => MlDsaSignature(sig: signMessage65(keyBytes: keyBytes, msg: message)),
-    //   MldsaMode.mldsa87 => MlDsaSignature(sig: signMessage87(keyBytes: keyBytes, msg: message)),
-    // };
     return MlDsaSignature(
-        sig: KeypairModel.signMessage(mode: keyMode, keyBytes: keyBytes, msg: message));
+        sig: _private!.signMsg(message));
   }
 
   @override
@@ -71,22 +63,11 @@ class MlDsaSigner implements Signer {
     if (_forSigning == null) {
       throw (Exception('Verify Signature (No Configuration), Use Init() Method'));
     }
-    if (_forSigning == false) {
-    } else {
+    if (_forSigning == true || _public == null ) {
       throw (Exception('The user tried to verify with the signing configuration'));
     }
     try {
-      final keyBytes = _public!.keyBytes;
-      final keyMode = _public!.mlDsaMode;
-
-      // final result = switch (keyMode) {
-      //   MldsaMode.mldsa44 => verifySig44(keyBytes: keyBytes, msg: message, sigBytes: signature.sig),
-      //   MldsaMode.mldsa65 => verifySig65(keyBytes: keyBytes, msg: message, sigBytes: signature.sig),
-      //   MldsaMode.mldsa87 => verifySig87(keyBytes: keyBytes, msg: message, sigBytes: signature.sig),
-      // };
-
-      return KeypairModel.verifySig(
-          mode: keyMode, keyBytes: keyBytes, sigBytes: signature.sig, msg: message);
+      return _public!.verifySig(signature.sig, message);
     } catch (e, stackTrace) {
       debugPrint('error: Error in Verifying Signature: $e, stackTrace: $stackTrace');
 

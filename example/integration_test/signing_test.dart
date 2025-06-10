@@ -1,9 +1,11 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
-import 'package:flutter_mldsa/src/ml_dsa/mldsa_key_generator.dart' ;
-import 'package:flutter_mldsa/src/ml_dsa/mldsa_params.dart' ;
-import 'package:flutter_mldsa/src/ml_dsa/mldsa_keypair.dart' ;
-import 'package:flutter_mldsa/src/ml_dsa/mldsa_signer.dart' ;
-import 'package:flutter_mldsa/src/rust/api/mode.dart' ;
+import 'package:flutter_mldsa/src/ml_dsa/mldsa_key_generator.dart';
+import 'package:flutter_mldsa/src/ml_dsa/mldsa_params.dart';
+import 'package:flutter_mldsa/src/ml_dsa/mldsa_keypair.dart';
+import 'package:flutter_mldsa/src/ml_dsa/mldsa_signer.dart';
+import 'package:flutter_mldsa/src/rust/api/mode.dart';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pointycastle/api.dart';
@@ -12,7 +14,7 @@ import 'package:pointycastle/api.dart';
 typedef TestCase = MldsaMode;
 
 void main() {
-  group("signature verification tests", () {
+  group("signature generation tests", () {
     final List<TestCase> testcases = MldsaMode.values;
     for (final testcase in testcases) {
       test(testcase.name, () {

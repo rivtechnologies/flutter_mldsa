@@ -6,6 +6,8 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    container:
+      image: rust:1.87
     permissions:
       contents: read 
       id-token: write 
@@ -16,16 +18,24 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
           ref: ${{ github.ref }}
-      - name: Necessary tag work
-        uses: ./.github/actions/tag-work 
-      - uses: dart-lang/setup-dart@v1
+
+      - name: Setup
+        uses: ./.github/actions/setup-dependencies
+
+      - name: tests
+        uses: ./.github/actions/integration-test
       
+      - name: Integration tests for wasm
+        uses: ./.github/actions/integration-test-wasm
+
+      - name: Update Changelog
+        uses: ./.github/actions/update-changelog 
+        
       - name: Pubspec Version Update
         uses: ./.github/actions/pubspec-version-update
         
-      - name: Setup CI Device action
-        uses: ./.github/actions/integration-test
-      - name: Publish Action
+      - uses: dart-lang/setup-dart@v1
+      
+        
+      - name: publish
         uses: ./.github/actions/publish-tagged-commit
-        with:
-          pub_cred: ${{ secrets.PUB_CREDENTIALS }}

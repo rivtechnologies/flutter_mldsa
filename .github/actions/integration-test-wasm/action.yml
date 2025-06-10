@@ -1,0 +1,34 @@
+name: Setup Wasm Test
+description: Setup the Wasm Integration Test
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Node.js
+      shell: bash
+      run: |
+        apt-get install nodejs -y
+
+    - name: Set up Node.js two electric boogaloo
+      uses: actions/setup-node@v4
+      with:
+        node-version: "22.16.0"
+
+    - name: Set up Chrome
+      uses: browser-actions/setup-chrome@v1
+      with:
+        install-chromedriver: true
+      
+    - name: Install rust-src for nightly
+      shell: bash
+      run: rustup component add rust-src --toolchain nightly
+    
+    - name: generate rust bindings
+      shell: bash
+      run: |   
+        flutter_rust_bridge_codegen generate
+
+    - name: Build & Test Web 
+      shell: bash
+      run: |
+        cd example
+        xvfb-run make test-web

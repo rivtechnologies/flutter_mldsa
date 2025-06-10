@@ -1,5 +1,5 @@
-name: Working on the tag
-description: This is going to do the necessary work involving the tag
+name: update changelog
+description: Update changelog from tag annotations
 runs:
   using: "composite"
   steps:

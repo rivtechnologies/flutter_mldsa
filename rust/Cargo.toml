@@ -11,6 +11,7 @@ flutter_rust_bridge = "=2.10.0"
 hybrid-array = "0.3.1"
 ml-dsa = "0.0.4"
 rand = "0.8"
+getrandom = { version = "0.2.16", features = ["js"] }
 anyhow = "1.0.98"
 
 [lints.rust]

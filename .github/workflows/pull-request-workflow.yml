@@ -11,10 +11,19 @@ on:
       - main
 
 jobs:
-  setup-and-tests:
+  test:
     runs-on: ubuntu-latest
+    container:
+      image: rust:1.87
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Run CI Device Setup Workflow
+
+      - name: Setup
+        uses: ./.github/actions/setup-dependencies
+
+      - name: Integration tests
         uses: ./.github/actions/integration-test
+
+      - name: Integration tests for wasm
+        uses: ./.github/actions/integration-test-wasm

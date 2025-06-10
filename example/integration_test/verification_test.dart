@@ -1,6 +1,7 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 import 'dart:math';
-import 'package:flutter_mldsa/src/ml_dsa/mldsa_keypair.dart' ;
 
 
 import 'package:flutter_mldsa/flutter_mldsa.dart';
@@ -68,5 +69,6 @@ void main() {
         }
       }, timeout: Timeout(Duration(days: 1)));
     }
+    print('THE VERIFICATION TESTS');
   });
 }

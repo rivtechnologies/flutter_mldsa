@@ -1,5 +1,5 @@
-use crate::api::mode::MldsaMode;
-use crate::api::simple::KeypairModel;
+use crate::api::{mode::MldsaMode};
+use crate::api::simple::KeyPair;
 
 #[test]
 fn mldsa_all_modes_work() {
@@ -9,17 +9,17 @@ fn mldsa_all_modes_work() {
     for mode in mode_list {
         println!("\n\n ###################-Mldsa Mode: {:?}-###################", mode);
         println!("The message is :\n{:?}", msg.to_vec());
-        let keys = KeypairModel::generate(mode);
+        let keys = KeyPair::generate(mode);
         print!("\nKeypair public/private key conform to the expected size");
-        let public_key = keys.public_key();
-        let private_key = keys.private_key();
+        let public_key = keys.verifying_key();
+        let private_key = keys.signing_key();
 
-        let public_key_length = keys.public_key().len();
-        let private_key_length = keys.private_key().len();
+        let public_key_length = public_key.bytes().len();
+        let private_key_length =  private_key.bytes().len();
 
-        let sig_bytes = KeypairModel::sign_message(mode, private_key, msg.clone()).unwrap();
+        let sig_bytes = private_key.sign_message(&msg);
         print!("\nThe signature is generated correctly");
-        let result = KeypairModel::verify_sig(mode, public_key, sig_bytes, msg.clone());
+        let result = public_key.verify_sig(&sig_bytes, &msg);
         assert_eq!(result, true);
 
         println!("\nThe result of verification is: {:?}", result);
