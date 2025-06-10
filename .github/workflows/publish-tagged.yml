@@ -19,6 +19,11 @@ jobs:
           fetch-tags: true
           ref: ${{ github.ref }}
 
+
+      - name: mark directory as safe for git
+        shell: bash
+        run: git config --global --add safe.directory $PWD 
+
       - name: Setup
         uses: ./.github/actions/setup-dependencies
 
