@@ -1,3 +1,7 @@
+## v0.1.5
+
+* added web support
+
 ## v0.1.4
 
 * just a ci test

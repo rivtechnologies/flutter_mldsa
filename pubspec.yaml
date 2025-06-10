@@ -1,6 +1,6 @@
 name: flutter_mldsa
 description: "Pointycastle interface implentations for MlDsa using bindings to RustCrypto implementation of ml-dsa"
-version: '0.1.4' 
+version: '0.1.5'
 homepage: https://github.com/rivtechnologies/flutter_mldsa
 environment:
   sdk: ^3.6.2
