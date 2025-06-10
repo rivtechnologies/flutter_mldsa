@@ -23,5 +23,5 @@ runs:
           echo "$tag_name is a LIGHTWEIGHT tag"
           exit 1
         elif [ "$type" = "tag" ]; then
-          sh scripts/update-changelog.sh
+          sh scripts/update-changelog.sh $tag_name
         fi
