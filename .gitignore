@@ -38,7 +38,3 @@ lib/src/rust/*
 rust/src/frb_generated.rs
 lib/src/rust/frb_generated.dart
 rust/Cargo.lock
-
-
-# Version Control
-CHANGELOG.md

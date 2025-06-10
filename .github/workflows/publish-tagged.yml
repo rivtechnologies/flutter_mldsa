@@ -38,9 +38,24 @@ jobs:
         
       - name: Pubspec Version Update
         uses: ./.github/actions/pubspec-version-update
+
+      - name: Configure Git
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+
+      - name: Commit and Push changes
+        shell: bash
+        run: |
+          git add .
+          git commit -m "chore: update changelog and pubspec version [skip ci]"
+          git push origin HEAD
+        env:
+          # Use the default GITHUB_TOKEN for pushing
+          # This token will NOT trigger new workflow runs
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
       - uses: dart-lang/setup-dart@v1
       
-        
       - name: publish
         uses: ./.github/actions/publish-tagged-commit
